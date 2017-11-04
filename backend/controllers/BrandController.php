@@ -41,12 +41,13 @@ class BrandController extends Controller
     public function actionIndex(){
         //分页工具类
         $pager = new Pagination();
+        $query = Brand::find()->where(['status'=>1]);
         //总页数 当前页数 每页显示多少
-        $pager->totalCount = Brand::find()->count();
+        $pager->totalCount = $query->count();
         $pager->pageSize = 3;
 
         //查询数据
-        $models = Brand::find()->where(['status'=>1])->offset($pager->offset)->limit($pager->limit)->all();
+        $models = $query->offset($pager->offset)->limit($pager->limit)->all();
         //展示页面
         return $this->render('index',['models'=>$models,'pager'=>$pager]);
     }

@@ -39,12 +39,13 @@ class ArticleController extends Controller
     public function actionCategoryIndex(){
         //分页工具类
         $pager = new Pagination();
+        $query = ArticleCategory::find()->where(['status'=>1]);
         //总页数 当前页数 每页显示多少
-        $pager->totalCount = ArticleCategory::find()->count();
+        $pager->totalCount = $query->count();
         $pager->pageSize = 3;
 
         //查询数据
-        $models = ArticleCategory::find()->where(['status'=>1])->offset($pager->offset)->limit($pager->limit)->all();
+        $models = $query->offset($pager->offset)->limit($pager->limit)->all();
         //展示页面
         return $this->render('category-index',['models'=>$models,'pager'=>$pager]);
     }
@@ -161,12 +162,13 @@ class ArticleController extends Controller
     public function actionArticleIndex(){
         //分页工具类
         $pager = new Pagination();
+        $query = Article::find()->where(['status'=>1]);
         //总页数 当前页数 每页显示多少
-        $pager->totalCount = Article::find()->count();
+        $pager->totalCount =$query->count();
         $pager->pageSize = 3;
 
         //查询数据
-        $models = Article::find()->where(['status'=>1])->offset($pager->offset)->limit($pager->limit)->all();
+        $models = $query->offset($pager->offset)->limit($pager->limit)->all();
         //展示页面
         return $this->render('index',['models'=>$models,'pager'=>$pager]);
     }

@@ -1,4 +1,4 @@
-<h1>添加文章分类</h1>
+<h1>文章分类</h1>
 <a href="<?=\yii\helpers\Url::to(['article/category-add'])?>" class="btn btn-primary">添加</a>
 <a href="<?=\yii\helpers\Url::to(['article/category-return'])?>" class="btn btn-primary">回收站</a>
 
