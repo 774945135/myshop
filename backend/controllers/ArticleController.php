@@ -144,9 +144,9 @@ class ArticleController extends Controller
                 //保存文章添加时间
                 $model->create_time = time();
                 $model->save();
-                $id = \yii::$app->db->getLastInsertID();
+                //$id = \yii::$app->db->getLastInsertID();
                 //保存文章内容对应文章id
-                $detail->article_id = $id;
+                $detail->article_id = $model->id;
                 $detail->save();
                 //跳转
                 \yii::$app->session->setFlash('success','添加成功');
@@ -185,12 +185,9 @@ class ArticleController extends Controller
             $detail->load($request->post());
             //验证
             if($model->validate() && $detail->validate()){
-                //保存文章添加时间
-                $model->create_time = time();
+                //保存更新文章
                 $model->save();
-                $id = \yii::$app->db->getLastInsertID();
-                //保存文章内容对应文章id
-                $detail->article_id = $id;
+                //保存更新文章内容文章
                 $detail->save();
                 //跳转
                 \yii::$app->session->setFlash('success','修改成功');
@@ -244,12 +241,14 @@ class ArticleController extends Controller
         return $this->redirect('article-return');
     }
 
-    //彻底删除文章
+    //彻底删除文章和内容
     public function actionArticleDelete($id){
         //根据id查询数据
         $model = Article::findOne(['id'=>$id]);
+        $detail = ArticleDetail::findOne(['id'=>$id]);
         //删除
         $model->delete();
+        $detail->delete();
         //跳转
         \yii::$app->session->setFlash('success','彻底删除成功');
         return $this->redirect('article-return');

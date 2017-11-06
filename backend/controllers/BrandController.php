@@ -4,12 +4,14 @@ namespace backend\controllers;
 
 use backend\models\Brand;
 use yii\data\Pagination;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\Request;
 use yii\web\UploadedFile;
 
 class BrandController extends Controller
 {
+    public $enableCsrfValidation = false;
     //增
     public function actionAdd(){
 
@@ -18,13 +20,8 @@ class BrandController extends Controller
         if($request->isPost){
             //接收表单数据
             $model->load($request->post());
-            //将上传文件变成对象
-            $model->imgFile = UploadedFile::getInstance($model,'imgFile');
             //验证
             if($model->validate()){
-                $file = '/uploads/'.uniqid().'.'.$model->imgFile->extension;
-                $model->imgFile->saveAs(\yii::getAlias('@webroot').$file,0);
-                $model->logo = $file;
                 //保存
                 $model->save();
                 //跳转
@@ -126,5 +123,23 @@ class BrandController extends Controller
         //跳转
         \yii::$app->session->setFlash('success','彻底删除成功');
         return $this->redirect('return');
+    }
+
+    //图片上传
+    public function actionUploads(){
+        //将上传文件封装成对象
+        if(\yii::$app->request->isPost){
+            $imgFile = UploadedFile::getInstanceByName('file');
+            if($imgFile){
+                $fileName = '/uploads/'.uniqid().'.'.$imgFile->extension;
+                $imgFile->saveAs(\yii::getAlias('@webroot').$fileName,0);
+                return Json::encode(['url'=>$fileName]);
+            }
+        }
+    }
+
+    public function actionText(){
+        //$this->layout = false;
+        return $this->renderPartial(['']);
     }
 }

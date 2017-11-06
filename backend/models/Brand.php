@@ -21,8 +21,8 @@ class Brand extends ActiveRecord
     public function rules()
     {
         return [
-          [['name','intro','sort','status'],'required'],
-          ['imgFile','file','extensions'=>['png','jpg','gif'],'skipOnEmpty'=>false]
+          [['name','intro','sort','status','logo'],'required'],
+
         ];
     }
 }

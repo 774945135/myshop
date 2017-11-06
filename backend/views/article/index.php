@@ -8,6 +8,7 @@
         <th>简介</th>
         <th>文章分类</th>
         <th>排序</th>
+        <th>时间</th>
         <th>操作</th>
 
     </tr>
@@ -18,6 +19,7 @@
             <td><?=$model->intro?></td>
             <td><?=$model->category->name?></td>
             <td><?=$model->sort?></td>
+            <td><?=date('Y:m:d H:i:s',$model->create_time)?></td>
             <td><a href="<?=\yii\helpers\Url::to(['article/article-edit'])?>?id=<?=$model->id?>" class="btn btn-success">修改</a>
                 <a href="javascript:;" class="del btn btn-danger" id="<?=$model->id?>">删除</a></td>
         </tr>
