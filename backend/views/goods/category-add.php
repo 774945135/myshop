@@ -23,7 +23,6 @@ var zTreeObj;
                 onClick: function(event, treeId, treeNode){
                     //获取被点击节点的id
                     var id= treeNode.id;
-                    //alert(treeNode.tId + ", " + treeNode.name);
                     //将id写入parent_id的值
                     $("#goodscategory-parent_id").val(id);
                 }

@@ -48,7 +48,7 @@ class GoodsController extends Controller
     //查看商品分类
     public function actionCategoryIndex(){
         //查询数据
-        $models = GoodsCategory::find()->all();
+        $models = GoodsCategory::find()->orderBy(['tree'=>'ASC','lft'=>'ASC'])->all();
         //展示页面
         return $this->render('category-index',['models'=>$models]);
 
@@ -66,14 +66,19 @@ class GoodsController extends Controller
             if($model->validate()){
                 //保存
                 if($model->parent_id == 0){
-                    //添加根节点
-                    $model->makeRoot();
+                    if($model->getOldAttribute('parent_id')==0){
+                        $model->save();
+                    }else{
+                        //修改根节点
+                        $model->makeRoot();
+                    }
+
                     //跳转
                     \yii::$app->session->setFlash('success','修改根节点成功');
                     return $this->redirect('category-index');
 
                 }else{
-                    //添加子节点
+                    //修改子节点
                     $parent = GoodsCategory::findOne(['id'=>$model->parent_id]);
                     $model->prependTo($parent);
                 }
@@ -95,14 +100,14 @@ class GoodsController extends Controller
         if($id){
             $model = GoodsCategory::findOne(['id'=>$id]);
             //判断是否有子节点
-            $child  = GoodsCategory::find()->where(['parent_id'=>$id])->all();
-            if($child){
+            //$child  = GoodsCategory::find()->where(['parent_id'=>$id])->all();
+            if($model->isLeaf()){
+                //没有子节点删除
+                $model->deleteWithChildren();
+                return 'success';
+            }else {
                 //有子节点保留
                 return '不能删除有子节点的节点,请删除所有子节点后重试!';
-            }else {
-                //没有子节点删除
-                $model->delete();
-                return 'success';
             }
         }else{
             return '节点不能存在或已经被删除';
