@@ -2,10 +2,15 @@
 namespace backend\models;
 
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 class Brand extends ActiveRecord
 {
     public $imgFile;
+
+    public static function getBrand_id(){
+        return ArrayHelper::map(self::find()->where(['status'=>1])->asArray()->all(),'id','name');
+    }
 
     public function attributeLabels()
     {
