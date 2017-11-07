@@ -1,3 +1,10 @@
+<?php $form = \yii\bootstrap\ActiveForm::begin(['action'=>\yii\helpers\Url::to(['goods/goods-index']),'method'=>'get']);
+//商品价格
+echo $form->field($model,'title')->textInput();
+//提交
+echo \yii\helpers\Html::submitButton('提交',['class'=>'btn btn-info']);
+ \yii\bootstrap\ActiveForm::end(); ?>
+
 <a href="<?=\yii\helpers\Url::to(['goods/goods-add'])?>">添加</a>
 <table class="table">
     <tr>
@@ -17,14 +24,20 @@
         <td><?=$model->shop_price?></td>
         <td><?=$model->stock?></td>
         <td><?=\yii\helpers\Html::img($model->logo,['width'=>50])?></td>
-        <td><a href="<?=\yii\helpers\Url::to(['goods/photos-index'])?>?id=<?=$model->id?>">相册</a>
-            <a href="<?=\yii\helpers\Url::to(['goods/goods-edit'])?>?id=<?=$model->id?>">修改</a>
-            <a href="javascript:;" class="del" id="<?=$model->id?>">删除</a>
-            <a href="<?=\yii\helpers\Url::to(['goods/goods-view'])?>?id=<?=$model->id?>">预览</a></td>
+        <td><a class="btn btn-default" href="<?=\yii\helpers\Url::to(['goods/photos-index'])?>?id=<?=$model->id?>">相册</a>
+            <a class="btn btn-warning" href="<?=\yii\helpers\Url::to(['goods/goods-edit'])?>?id=<?=$model->id?>">修改</a>
+            <a href="javascript:;" class="del btn btn-danger" id="<?=$model->id?>">删除</a>
+            <a class="btn btn-success" href="<?=\yii\helpers\Url::to(['goods/goods-view'])?>?id=<?=$model->id?>">预览</a></td>
     </tr>
     <?php endforeach;?>
 </table>
 <?php
+
+echo \yii\widgets\LinkPager::widget([
+        'pagination'=>$pager
+    ]);
+
+
     /**
      * @var $this \yii\web\View
      */

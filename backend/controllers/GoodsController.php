@@ -8,6 +8,8 @@ use backend\models\GoodsCategory;
 use backend\models\GoodsDayCount;
 use backend\models\GoodsGallery;
 use backend\models\GoodsIntro;
+use yii\bootstrap\ActiveForm;
+use yii\data\Pagination;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\Request;
@@ -126,10 +128,12 @@ class GoodsController extends Controller
         $session = \yii::$app->session;
         //实例化goods
         $model = new Goods();
+        $model->goods_category_id =0;
         //实例化goodsintro
         $intro = new GoodsIntro();
         //实例化goodsdaycount
         $day = new GoodsDayCount();
+        $cate = GoodsCategory::find()->all();
         $request = new Request();
         if($request->isPost){
             //接收表单数据
@@ -140,7 +144,7 @@ class GoodsController extends Controller
                 //保存时间
                 $model->create_time = time();
                 //添加货号
-                if($day->day = date('Ymd',time())){
+                if(GoodsDayCount::findOne(['day'=>date('Ymd',time())])){
                     $str = $session->get('sn');
                 }else{
                     $str=1;
@@ -150,12 +154,15 @@ class GoodsController extends Controller
                 $session->set('sn',$str+1);
 
                 //判断已经存在当天的添加记录
-                if($day->day = date('Ymd',time())){
-                    $day->count +=$model->stock;
-                    GoodsDayCount::findone(['day'=>date('Ymd',time())])->update();
+                if(GoodsDayCount::findOne(['day'=>date('Ymd',time())])){
+                    $d = GoodsDayCount::findOne(['day'=>date('Ymd',time())]);
+                    $d->count = $d->count + $model->stock;
+                    //$d->count = $day->count;
+                    //var_dump($d->count);die;
+                    $d->save();
                 }else{
                     $day->day = date('Ymd',time());
-                    $day->count +=$model->stock;
+                    $day->count =$model->stock;
                     $day->save();
                 }
 
@@ -170,15 +177,24 @@ class GoodsController extends Controller
 
         }
         //展示表单
-        return $this->render('goods-add',['model'=>$model,'intro'=>$intro]);
+        return $this->render('goods-add',['model'=>$model,'intro'=>$intro,'cate'=>$cate]);
     }
 
     //查看商品
     public function actionGoodsIndex(){
+        $model = new Goods();
+        $request = new Request();
+        $keyword = $request->get('Goods');
+        //分页工具类
+        $pager = new Pagination;
+        //总页数 当前页数 每页显示多少页
+        $pager->pageSize = 3;
+        $query = Goods::find()->where(['status'=>1])->andwhere(["like","name","{$keyword['title']}"]);
+        $pager->totalCount = $query->count();
         //查询数据
-        $models = Goods::find()->where(['status'=>1])->all();
+        $models = $query->offset($pager->offset)->limit($pager->limit)->all();
         //显示表单
-        return $this->render('goods-index',['models'=>$models]);
+        return $this->render('goods-index',['models'=>$models,'pager'=>$pager,'model'=>$model]);
 
     }
 
@@ -280,19 +296,50 @@ class GoodsController extends Controller
     public function actionPhotoAdd(){
         $model = new GoodsGallery();
         $request = new Request();
-        if($request->isGet){
-            $id = $request->get('id');
+        if($request->isPost){
+            $model->load($request->post());
             $imgFile = UploadedFile::getInstanceByName('file');
             if($imgFile){
                 $fileName = '/uploads/'.uniqid().'.'.$imgFile->extension;
                 $imgFile->saveAs(\yii::getAlias('@webroot').$fileName,0);
-                $model->path = $fileName;
-                $model->goods_id = $id;
-                $model->save();
+               if($model->validate()){
+                   $model->path = $fileName;
+                   $model->goods_id = \yii::$app->request->get('id');
+                   $model->save(false);
+               }
                 return Json::encode(['url'=>$fileName]);
 
             }
         }
+
+    }
+
+    //删除相册图片
+    public function actionPhotoDel(){
+        $request = new Request();
+        $id = $request->post('id');
+        if($id){
+            $model = GoodsGallery::findOne($id);
+            $model->delete();
+            return 'success';
+        }else{
+            return '该图片已删除或不存在';
+        }
+    }
+
+    //搜索
+    public function actionSearch(){
+        $model = new Goods();
+        $request = new Request();
+        if($request->isGet){
+            $a = $request->get('Goods');
+
+            $models = Goods::find()->where(["like","name","{$a['title']}"])->all();
+        return $this->render('index',['models'=>$models]);
+        }
+
+
+
 
     }
 }

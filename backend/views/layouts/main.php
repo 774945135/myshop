@@ -37,11 +37,21 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => '文章列表','items'=>[
-            ['label' => '文章列表','url' =>['/article/category-index']],
+        ['label' => '文章管理','items'=>[
+            ['label' => '文章列表','url' =>['/article/article-index']],
+            ['label' => '文章添加','url' =>['/article/article-add']],
+            ['label' => '文章分类','url' =>['/article/category-index']],
+            ['label' => '分类添加','url' =>['/article/category-add']],
         ], 'url' => ['/article/article-index']],
-        ['label' => '文章分类列表', 'url' => ['/article/category-index']],
-        ['label' => '品牌列表', 'url' => ['/brand/index']],
+        ['label' => '商品管理', 'items' => [
+            ['label' => '品牌列表','url' =>['/brand/index']],
+            ['label' => '品牌添加','url' =>['/brand/add']],
+            ['label' => '商品列表','url' =>['/goods/goods-index']],
+            ['label' => '商品添加','url' =>['/goods/goods-add']],
+            ['label' => '商品分类','url' =>['/goods/category-index']],
+            ['label' => '分类添加','url' =>['/goods/category-add']],
+
+        ]],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => '登陆', 'url' => ['/site/login']];

@@ -10,9 +10,13 @@ namespace backend\models;
 
 use creocoder\nestedsets\NestedSetsBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 class GoodsCategory extends ActiveRecord
 {
+    public static function getCate_id(){
+        return ArrayHelper::map(self::find()->asArray()->all(),'id','name');
+    }
     public function attributeLabels()
     {
         return [
