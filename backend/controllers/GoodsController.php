@@ -327,19 +327,5 @@ class GoodsController extends Controller
         }
     }
 
-    //搜索
-    public function actionSearch(){
-        $model = new Goods();
-        $request = new Request();
-        if($request->isGet){
-            $a = $request->get('Goods');
 
-            $models = Goods::find()->where(["like","name","{$a['title']}"])->all();
-        return $this->render('index',['models'=>$models]);
-        }
-
-
-
-
-    }
 }

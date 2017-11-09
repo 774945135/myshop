@@ -1,10 +1,12 @@
-<?php $form = \yii\bootstrap\ActiveForm::begin(['action'=>\yii\helpers\Url::to(['goods/goods-index']),'method'=>'get']);
-//商品价格
-echo $form->field($model,'title')->textInput();
-//提交
-echo \yii\helpers\Html::submitButton('提交',['class'=>'btn btn-info']);
- \yii\bootstrap\ActiveForm::end(); ?>
+<?php $form = \yii\bootstrap\ActiveForm::begin(['action'=>\yii\helpers\Url::to(['goods/goods-index']),'method'=>'get']);?>
 
+    <div class="row">
+        <div class="col-md-2">
+            <?=$form->field($model,'title')->textInput();?>
+        </div>
+    </div>
+<?=\yii\helpers\Html::submitButton('搜索',['class'=>'btn btn-info']);?>
+<?php \yii\bootstrap\ActiveForm::end(); ?>
 <a href="<?=\yii\helpers\Url::to(['goods/goods-add'])?>">添加</a>
 <table class="table">
     <tr>

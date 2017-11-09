@@ -57,7 +57,7 @@ JS
         <div id="fileList" class="uploader-list"></div>
         <div id="filePicker">选择图片</div>
     </div>
-    <div><img id="img" width="100"></div>
+    <div><img src="<?=$model->logo?>" id="img" width="100"></div>
 <?php
 //============================Uploader======================================
 //商品分类id

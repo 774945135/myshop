@@ -36,13 +36,16 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => '管理员管理', 'items'=>[
+            ['label' => '管理员列表','url' =>['/user/index']],
+            ['label' => '管理员添加','url' =>['/user/add']],
+        ]],
         ['label' => '文章管理','items'=>[
             ['label' => '文章列表','url' =>['/article/article-index']],
             ['label' => '文章添加','url' =>['/article/article-add']],
             ['label' => '文章分类','url' =>['/article/category-index']],
             ['label' => '分类添加','url' =>['/article/category-add']],
-        ], 'url' => ['/article/article-index']],
+        ]],
         ['label' => '商品管理', 'items' => [
             ['label' => '品牌列表','url' =>['/brand/index']],
             ['label' => '品牌添加','url' =>['/brand/add']],
@@ -54,10 +57,11 @@ AppAsset::register($this);
         ]],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => '登陆', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => '登陆', 'url' => ['/user/login']];
     } else {
+
         $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
+            . Html::beginForm(['/user/logout'], 'post')
             . Html::submitButton(
                 '退出登陆 (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']

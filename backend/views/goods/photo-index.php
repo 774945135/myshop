@@ -58,9 +58,8 @@ var uploader = WebUploader.create({
 uploader.on( 'uploadSuccess', function( file ,response ) {
    // $( '#'+file.id ).addClass('upload-state-done');
     //console.debug(file);
-        alert('添加图片成功');
-        //$('#tr').append('<td>'+img(response.url)+'</td><td><a href="javascript:;" class="del btn btn-danger" id="<?='+$model->id+'?>">'+删除+'</a></td>')
-        $("#myid").html(file);//要刷新的div
+        
+        window.location.reload();//自动刷新页面
   
    
 });
