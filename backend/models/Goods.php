@@ -29,7 +29,7 @@ class Goods extends ActiveRecord
             'goods_category_id'=>'商品分类',
             'brand_id'=>'品牌分类',
             'market_price'=>'市场价格',
-            'shop_price'=>'市场价格',
+            'shop_price'=>'商品价格',
             'stock'=>'库存',
             'is_on_sale'=>'是否在售',
             'status'=>'是否上架',

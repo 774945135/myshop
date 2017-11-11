@@ -8,6 +8,7 @@ use yii\web\IdentityInterface;
 
 class User extends ActiveRecord implements IdentityInterface
 {
+    public $roles;
 
     public function attributeLabels()
     {
@@ -16,6 +17,7 @@ class User extends ActiveRecord implements IdentityInterface
             'password_hash'=>'密码',
             'email'=>'邮箱',
             'status'=>'状态',
+            'roles'=>'分配角色',
         ];
     }
 
@@ -23,9 +25,43 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
           [['username','password_hash','email','status'],'required'],
-            ['email','email']
+            ['email','email'],
+            [['username','email'],'unique'],
+            ['roles','safe']
         ];
     }
+
+    public function getList(){
+        $menuItems = [];
+        //获取所有一级菜单
+        $menus = AdminList::find()->where(['parent_id'=>0])->all();
+        foreach ($menus as $menu){
+
+            $items = [];
+            //遍历该一级菜单的子菜单
+            foreach ($menu->children as $child){
+                //根据用户权限来确定是否显示该菜单
+                if(\Yii::$app->user->can($child->url)){
+                    $items[] =  ['label'=>$child->name,'url'=>[$child->url]];
+                }
+            }
+
+            //$items[] =  ['label'=>'分类列表','url'=>['goods/ztree']];
+
+
+            $menuItem = ['label'=>$menu->name,'items'=>$items];
+            //将该组菜单放入菜单组里面
+            //如果没有二级菜单,则不显示一级菜单
+            if($items){
+                $menuItems[] = $menuItem;
+
+            }
+        }
+
+        return $menuItems;
+    }
+
+
 
     /**
      * Finds an identity by the given ID.
@@ -76,7 +112,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getAuthKey()
     {
-        // TODO: Implement getAuthKey() method.
+        return $this->auth_key;
     }
 
     /**
@@ -89,6 +125,6 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        // TODO: Implement validateAuthKey() method.
+        return $this->getAuthKey() === $authKey;
     }
 }
