@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\Brand;
 use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
@@ -177,5 +178,16 @@ class BrandController extends Controller
     public function actionText(){
         //$this->layout = false;
         return $this->renderPartial(['']);
+    }
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['login'],
+            ]
+        ];
+
     }
 }

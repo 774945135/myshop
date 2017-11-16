@@ -9,6 +9,8 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     public $roles;
+    //public $code;//验证码
+
 
     public function attributeLabels()
     {
@@ -27,7 +29,7 @@ class User extends ActiveRecord implements IdentityInterface
           [['username','password_hash','email','status'],'required'],
             ['email','email'],
             [['username','email'],'unique'],
-            ['roles','safe']
+            ['roles','safe'],
         ];
     }
 

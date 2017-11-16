@@ -3,9 +3,12 @@
 namespace backend\controllers;
 
 
+use backend\filters\RbacFilter;
+use backend\models\AdminList;
 use backend\models\AuthItem;
 use backend\models\PermForm;
 use backend\models\RoleForm;
+use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -217,6 +220,17 @@ class AuthController extends Controller
             }
         }
         return $this->render('role-add',['model'=>$model,'permissions'=>$permissions]);
+
+    }
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['login'],
+            ]
+        ];
 
     }
 

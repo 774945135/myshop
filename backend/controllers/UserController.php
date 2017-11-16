@@ -4,10 +4,13 @@ namespace backend\controllers;
 
 
 
+use backend\filters\RbacFilter;
 use backend\models\LoginForm;
 use backend\models\PwdForm;
 use backend\models\User;
+use yii\captcha\CaptchaAction;
 use yii\data\Pagination;
+use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Cookie;
@@ -203,7 +206,7 @@ class UserController extends Controller
                         //保存到cookie
                         $user->last_login_time = time();
                         $user->last_login_ip = \yii::$app->request->userIP;
-                        $user->save();
+                        $user->save(false);
 
 
                         //跳转
@@ -241,5 +244,24 @@ class UserController extends Controller
         //跳转
         \yii::$app->session->setFlash('success','注销成功');
         return $this->redirect('login');
+    }
+    //验证码
+    public function actions(){
+        return [
+            'captcha'=>[
+                'class'=>CaptchaAction::className()
+            ]
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['login'],
+            ]
+        ];
+
     }
 }

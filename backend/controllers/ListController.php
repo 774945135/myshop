@@ -3,10 +3,10 @@
 namespace backend\controllers;
 
 
+use backend\filters\RbacFilter;
 use backend\models\AdminList;
 use yii\data\Pagination;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\Request;
 
@@ -111,5 +111,16 @@ class ListController extends Controller
         }else{
             return '菜单已被删除或不存在';
         }
+    }
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['login'],
+            ]
+        ];
+
     }
 }

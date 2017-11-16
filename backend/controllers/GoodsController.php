@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 
+use backend\filters\RbacFilter;
 use backend\models\Goods;
 use backend\models\GoodsCategory;
 use backend\models\GoodsDayCount;
@@ -23,6 +24,8 @@ class GoodsController extends Controller
 
         $model = new GoodsCategory();
         $request = new Request();
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
         $model->parent_id =0;
         if($request->isPost){
             //接收表单数据
@@ -41,6 +44,7 @@ class GoodsController extends Controller
                     $parent = GoodsCategory::findOne(['id'=>$model->parent_id]);
                     $model->prependTo($parent);
                 }
+                $redis->del('goods-category');
                 //跳转
                 \yii::$app->session->setFlash('success','添加子节点成功');
                 return $this->redirect('category-index');
@@ -65,6 +69,8 @@ class GoodsController extends Controller
     public function actionCategoryEdit($id){
         //根据id查询数据
         $model = GoodsCategory::findOne($id);
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
         $request = new Request();
         if($request->isPost){
             //接收表单数据
@@ -89,6 +95,7 @@ class GoodsController extends Controller
                     $parent = GoodsCategory::findOne(['id'=>$model->parent_id]);
                     $model->prependTo($parent);
                 }
+                $redis->del('goods-category');
                 //跳转
                 \yii::$app->session->setFlash('success','修改子节点成功');
                 return $this->redirect('category-index');
@@ -103,6 +110,8 @@ class GoodsController extends Controller
     public function actionCategoryDel(){
         //根据id查询数据
         $request = new Request();
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
         $id = $request->post('id');
         if($id){
             $model = GoodsCategory::findOne(['id'=>$id]);
@@ -111,6 +120,7 @@ class GoodsController extends Controller
             if($model->isLeaf()){
                 //没有子节点删除
                 $model->deleteWithChildren();
+                $redis->del('goods-category');
                 return 'success';
             }else {
                 //有子节点保留
@@ -325,6 +335,17 @@ class GoodsController extends Controller
         }else{
             return '该图片已删除或不存在';
         }
+    }
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['login'],
+            ]
+        ];
+
     }
 
 

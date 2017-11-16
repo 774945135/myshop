@@ -3,9 +3,11 @@
 namespace backend\controllers;
 
 
+use backend\filters\RbacFilter;
 use backend\models\Article;
 use backend\models\ArticleCategory;
 use backend\models\ArticleDetail;
+use frontend\filters\TimeFilter;
 use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\Request;
@@ -252,6 +254,17 @@ class ArticleController extends Controller
         //跳转
         \yii::$app->session->setFlash('success','彻底删除成功');
         return $this->redirect('article-return');
+    }
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['login'],
+            ]
+        ];
+
     }
 }
 
