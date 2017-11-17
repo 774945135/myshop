@@ -571,6 +571,6 @@
 </body>
 </html>
 <?php
-    \yii\widgets\LinkPager::widget([
+echo   \yii\widgets\LinkPager::widget([
             'pagination'=>$pager
     ]);

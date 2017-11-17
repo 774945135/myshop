@@ -16,13 +16,17 @@
 <body>
 <!-- 顶部导航 start -->
 <div class="topnav">
-    <div class="topnav_bd w990 bc">
+    <div class="topnav_bd w1210 bc">
         <div class="topnav_left">
 
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
+                <?php if(\yii::$app->user->isGuest){?>
+                    <li>您好，欢迎来到京西！[<a href="<?=\yii\helpers\Url::to(['member/login'])?>">登录</a>] [<a href="<?=\yii\helpers\Url::to(['member/add'])?>">免费注册</a>] </li>
+                <?php }else{?>
+                    <li>您好,欢迎<a href="<?=\yii\helpers\Url::to(['shop/user'])?>"> <?=\yii::$app->user->identity->username?></a> 来到京西 [<a href="<?=\yii\helpers\Url::to(['member/logout'])?>">安全退出</a>]</li>
+                <?php }?>
                 <li class="line">|</li>
                 <li>我的订单</li>
                 <li class="line">|</li>
@@ -67,13 +71,23 @@
         </tr>
         </thead>
         <tbody>
-
-        <?= \frontend\models\Cart::getList($models)?>
-
+        <?php foreach ($models as $model):?>
+        <tr data-id="<?=$model->id?>">
+            <td class="col1"><a href=""><img src="http://www.myadmin.com<?=$model->logo?>" alt="" /></a>  <strong><a href=""><?=$model->name?></a></strong></td>
+            <td class="col3">￥<span><?=$model->shop_price?></span></td>
+            <td class="col4">
+                <a href="javascript:;" class="reduce_num"></a>
+                <input type="text" name="amount" id="amount" value="<?=$carts[$model->id]?>" class="amount"/>
+                <a href="javascript:;" class="add_num"></a>
+            </td>
+            <td class="col5">￥<span><?=$carts[$model->id]*$model->shop_price?>.00</span></td>
+            <td class="col6"><a href="<?=\yii\helpers\Url::to(['shop/del-flow1'])?>?id=<?=$model->id?>">删除</a></td>
+        </tr>
+        <?php endforeach;?>
         </tbody>
         <tfoot>
         <tr>
-            <?=\frontend\models\Cart::getMoney()?>
+            <td colspan="6">购物金额总计： <strong>￥ <span id="total"><?=$money?>.00</span></strong></td>
         </tr>
         </tfoot>
     </table>
@@ -110,6 +124,34 @@
         <a href=""><img src="/images/beian.gif" alt="" /></a>
     </p>
 </div>
+<script type="text/javascript">
+
+    $("#amount").change(function () {
+        var url = '<?=\yii\helpers\Url::to(['shop/change'])?>';
+        var amount = $(this).val();
+        var goods_id = $(this).closest('tr').attr('data-id');
+        $.post(url,{goods_id:goods_id,amount:amount},function (data) {
+
+        })
+    })
+    $('.reduce_num').click(function () {
+        var url = '<?=\yii\helpers\Url::to(['shop/change'])?>';
+        var amount = parseInt($('#amount').val())-1;
+        var goods_id = $(this).closest('tr').attr('data-id');
+        $.post(url,{goods_id:goods_id,amount:amount},function (data) {
+
+        })
+    })
+    $('.add_num').click(function () {
+        var url = '<?=\yii\helpers\Url::to(['shop/change'])?>';
+        var amount = parseInt($('#amount').val())+1;
+        var goods_id = $(this).closest('tr').attr('data-id');
+        $.post(url,{goods_id:goods_id,amount:amount},function (data) {
+
+        })
+    })
+
+</script>
 <!-- 底部版权 end -->
 </body>
 </html>

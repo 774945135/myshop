@@ -119,7 +119,7 @@
         <div class="cart fl">
             <dl>
                 <dt>
-                    <a href="">去购物车结算</a>
+                    <a href="<?=\yii\helpers\Url::to(['shop/flow1'])?>">去购物车结算</a>
                     <b></b>
                 </dt>
                 <dd>
