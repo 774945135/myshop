@@ -126,7 +126,7 @@
 </div>
 <script type="text/javascript">
 
-    $("#amount").change(function () {
+    $(".amount").change(function () {
         var url = '<?=\yii\helpers\Url::to(['shop/change'])?>';
         var amount = $(this).val();
         var goods_id = $(this).closest('tr').attr('data-id');
@@ -137,7 +137,8 @@
     })
     $('.reduce_num').click(function () {
         var url = '<?=\yii\helpers\Url::to(['shop/change'])?>';
-        var amount = parseInt($('#amount').val())-1;
+        //console.debug($(this).parent().find(".amount").val());
+        var amount = parseInt($(this).parent().find(".amount").val())-1;
         var goods_id = $(this).closest('tr').attr('data-id');
         $.post(url,{goods_id:goods_id,amount:amount},function (data) {
 
@@ -145,7 +146,7 @@
     })
     $('.add_num').click(function () {
         var url = '<?=\yii\helpers\Url::to(['shop/change'])?>';
-        var amount = parseInt($('#amount').val())+1;
+        var amount = parseInt($(this).parent().find(".amount").val())+1;
         var goods_id = $(this).closest('tr').attr('data-id');
         $.post(url,{goods_id:goods_id,amount:amount},function (data) {
 
