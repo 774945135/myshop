@@ -12,10 +12,12 @@ namespace frontend\controllers;
 
 use backend\models\GoodsCategory;
 use frontend\components\Sms;
+use frontend\models\Cart;
 use frontend\models\LoginForm;
 use frontend\models\Member;
 use yii\helpers\Url;
 use yii\web\Controller;
+use yii\web\Cookie;
 use yii\web\Request;
 
 
@@ -79,6 +81,38 @@ class MemberController extends Controller
                     }else{
                         \yii::$app->user->login($member);
                     }
+
+                    $member_id = \yii::$app->user->identity->id;
+                    $cookies = \yii::$app->request->cookies;
+                    $carts = $cookies->getValue('carts');
+                    if ($carts){
+                        $carts = unserialize($carts);
+
+                        foreach ($carts as $key=>$val){
+                            $goods_id = $key;
+                            $amount = $val;
+                            if($cart = Cart::findOne(['member_id'=>$member_id,'goods_id'=>$goods_id])){
+                                $cart->amount += $val;
+                                $cart->save();
+                                unset($carts[$val]);
+                            }else{
+                                $cart = new Cart();
+                                $cart->member_id =$member_id;
+                                $cart->goods_id = $goods_id;
+                                $cart->amount = $amount;
+                                $cart->save();                                unset
+                                ($carts[$val]);
+                            }
+
+                        }
+                        $cookies = \yii::$app->response->cookies;
+                        $cookies->remove('carts');
+                    }
+
+
+
+
+                    //die;
                     echo  '登陆成功';
                     return $this->redirect(Url::to(['shop/index']));
                 }else{
@@ -97,7 +131,7 @@ class MemberController extends Controller
         //注销成功
          \yii::$app->user->logout();
          //返回登陆界面
-        return $this->render('login');
+        return $this->redirect(['shop/index']);
     }
 
     //大于测试

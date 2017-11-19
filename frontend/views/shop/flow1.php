@@ -73,7 +73,7 @@
         <tbody>
         <?php foreach ($models as $model):?>
         <tr data-id="<?=$model->id?>">
-            <td class="col1"><a href=""><img src="http://www.myadmin.com<?=$model->logo?>" alt="" /></a>  <strong><a href=""><?=$model->name?></a></strong></td>
+            <td class="col1"><a href=""><img src="<?=\yii::$app->params['url_logo'].$model->logo?>" alt="" /></a>  <strong><a href=""><?=$model->name?></a></strong></td>
             <td class="col3">￥<span><?=$model->shop_price?></span></td>
             <td class="col4">
                 <a href="javascript:;" class="reduce_num"></a>
@@ -93,7 +93,7 @@
     </table>
     <div class="cart_btn w990 bc mt10">
         <a href="" class="continue">继续购物</a>
-        <a href="" class="checkout">结 算</a>
+        <a href="<?=\yii\helpers\Url::to(['shop/flow2'])?>" class="checkout">结 算</a>
     </div>
 </div>
 <!-- 主体部分 end -->
@@ -130,6 +130,7 @@
         var url = '<?=\yii\helpers\Url::to(['shop/change'])?>';
         var amount = $(this).val();
         var goods_id = $(this).closest('tr').attr('data-id');
+        //console.debug(goods_id);
         $.post(url,{goods_id:goods_id,amount:amount},function (data) {
 
         })

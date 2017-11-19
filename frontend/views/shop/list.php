@@ -441,7 +441,7 @@
                 <?php foreach ($models as $model):?>
                 <li>
                     <dl>
-                        <dt><a href="<?=\yii\helpers\Url::to(['shop/goods'])?>?id=<?=$model->id?>"><img src="<?='http://www.myadmin.com'.$model->logo?>" alt="" /></a></dt>
+                        <dt><a href="<?=\yii\helpers\Url::to(['shop/goods'])?>?id=<?=$model->id?>"><img src="<?=\yii::$app->params['url_logo'].$model->logo?>" alt="" /></a></dt>
                         <dd><a href="<?=\yii\helpers\Url::to(['shop/goods'])?>?id=<?=$model->id?>"><?=$model->name?></a></dt>
                         <dd><strong>￥<?=$model->shop_price?></strong></dt>
                         <dd><a href=""><em>已有10人评价</em></a></dt>
