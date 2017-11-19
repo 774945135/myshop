@@ -494,12 +494,12 @@
                 <tbody>
                 <?php foreach ($order as $v):?>
                 <tr>
-                    <td><a href=""><?=rand(100000,999999)?></a></td>
+                    <td><a href=""><?=$v->id?></a></td>
                     <td><?php foreach (\frontend\models\OrderGoods::find()->where(['order_id'=>$v->id])->limit(3)->all() as $i):?>
                     <a href=""><img src="<?=\yii::$app->params['url_logo'].$i->logo?>" alt="" /></a><?php endforeach;?>
                     </td>
                     <td><?=$v->name?></td>
-                    <td>￥<?=$v->total?>.00 货到付款</td>
+                    <td>￥<?=$v->total?> 货到付款</td>
                     <td><?=date('Y-m-d H:i:s',$v->create_time)?></td>
                     <td><?=$status[$v->status]?></td>
                     <td><a href="">查看</a> | <a href="">删除</a></td>

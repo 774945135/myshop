@@ -283,7 +283,7 @@ class GoodsController extends Controller
             'upload' => [
                 'class' => 'kucha\ueditor\UEditorAction',
                 'config' => [
-                    //"imageUrlPrefix" => "http://www.baidu.com",//图片访问路径前缀
+                    "imageUrlPrefix" => "http://www.myadmin.com",//图片访问路径前缀
                     "imagePathFormat" => "/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}" //上传保存路径
                 ],
             ]
